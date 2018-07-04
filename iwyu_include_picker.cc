@@ -417,6 +417,30 @@ const IncludeMapEntry libc_symbol_map[] = {
   { "wint_t", kPrivate, "<stddef.h>", kPublic },
   { "wint_t", kPrivate, "<runetype.h>", kPublic },
   { "va_list", kPrivate, "<stdio.h>", kPublic },
+  { "pthread_attr_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_attr_t", kPrivate, "<sys/signal.h>", kPublic },
+  { "pthread_attr_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_attr_t", kPrivate, "<pthread/qos.h>", kPublic },
+  { "pthread_cond_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_cond_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_condattr_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_condattr_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_key_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_key_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_mutex_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_mutex_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_mutexattr_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_mutexattr_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_once_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_once_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_rwlock_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_rwlock_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_rwlockattr_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_rwlockattr_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_t", kPrivate, "<sys/types.h>", kPublic },
+  { "pthread_t", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "pthread_t", kPrivate, "<signal.h>", kPublic },
+  { "pthread_t", kPrivate, "<pthread/qos.h>", kPublic },
 };
 
 // Symbol -> include mappings for GNU libstdc++
@@ -892,7 +916,7 @@ const IncludeMapEntry libstdcpp_include_map[] = {
   { "<bits/fstream.tcc>", kPrivate, "<fstream>", kPublic },
   { "<bits/istream.tcc>", kPrivate, "<istream>", kPublic },
   { "<bits/list.tcc>", kPrivate, "<list>", kPublic },
-  { "<bits/locale_classes.tcc>", kPrivate, 
+  { "<bits/locale_classes.tcc>", kPrivate,
     "<bits/locale_classes.h>", kPrivate },
   { "<bits/locale_facets.tcc>", kPrivate, "<bits/locale_facets.h>", kPrivate },
   { "<bits/locale_facets_nonio.tcc>", kPrivate,
@@ -900,7 +924,7 @@ const IncludeMapEntry libstdcpp_include_map[] = {
   { "<bits/ostream.tcc>", kPrivate, "<ostream>", kPublic },
   { "<bits/sstream.tcc>", kPrivate, "<sstream>", kPublic },
   { "<bits/streambuf.tcc>", kPrivate, "<streambuf>", kPublic },
-  { "<bits/valarray_array.tcc>", kPrivate, 
+  { "<bits/valarray_array.tcc>", kPrivate,
     "<bits/valarray_array.h>", kPrivate },
   { "<bits/vector.tcc>", kPrivate, "<vector>", kPublic },
   { "<debug/safe_iterator.tcc>", kPrivate, "<debug/safe_iterator.h>", kPublic },
@@ -1061,6 +1085,13 @@ const IncludeMapEntry libstdcpp_include_map[] = {
   { "<sys/_types/_timeval64.h>", kPrivate, "<sys/time.h>", kPublic },
   { "<sys/_types/_ucontext.h>", kPrivate, "<sys/signal.h>", kPublic },
   { "<sys/_types/_ucontext.h>", kPrivate, "<sys/ucontext.h>", kPrivate },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<dirent.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<signal.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<sys/types.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<sys/signal.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<pthread/pthread.h>", kPublic },
+  { "<sys/_pthread/_pthread_types.h>", kPrivate, "<pthread/qos.h>", kPublic },
 };
 
 // Returns true if str is a valid quoted filepath pattern (i.e. either
@@ -1790,7 +1821,7 @@ void IncludePicker::AddMappingsFromFile(const string& filename,
 
         // Add the path of the file we're currently processing
         // to the search path. Allows refs to be relative to referrer.
-        vector<string> extended_search_path = 
+        vector<string> extended_search_path =
             ExtendMappingFileSearchPath(search_path,
                                         GetParentPath(absolute_path));
 
