@@ -1320,6 +1320,11 @@ void IncludePicker::AddDirectInclude(const string& includer_filepath,
     public_header = "<asm/" + public_header;   // now it's <asm/something.h>
     AddMapping(quoted_includee, public_header);
   }
+  // A leading underscore is a good indication of private header
+  // e.g. #include <_types/_uint32_t.h>  // for uint32_t
+  if (StartsWith(quoted_includee, "<_") || quoted_includee.find("/_") != string::npos) {
+    MarkIncludeAsPrivate(quoted_includee);
+  }
 }
 
 void IncludePicker::AddMapping(const string& map_from, const string& map_to) {
