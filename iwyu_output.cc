@@ -1828,16 +1828,17 @@ size_t PrintableDiffs(const string& filename,
 
   // First, check if there are no adds or deletes.  If so, we print a
   // shorter summary line.
-  bool no_adds_or_deletes = true;
+  multimap<LineSortKey, const OneIncludeOrForwardDeclareLine*> lines_to_add;
+  multimap<LineSortKey, const OneIncludeOrForwardDeclareLine*> lines_to_delete;
   for (const auto& key_line : sorted_lines) {
     const OneIncludeOrForwardDeclareLine* line = key_line.second;
-    if ((line->is_desired() && !line->is_present()) || // add
-        (line->is_present() && !line->is_desired())) { // delete
-      no_adds_or_deletes = false;
-      break;
+    if (line->is_desired() && !line->is_present()) {
+      lines_to_add.insert(key_line);
+    } else if (line->is_present() && !line->is_desired()) {
+      lines_to_delete.insert(key_line);
     }
   }
-  if (no_adds_or_deletes) {
+  if (lines_to_add.empty() && lines_to_delete.empty()) {
     output = "\n(" + filename + " has correct #includes/fwd-decls)\n";
     return 0;
   }
@@ -1845,32 +1846,28 @@ size_t PrintableDiffs(const string& filename,
   size_t num_edits = 0;
 
   // First, new desired includes and forward-declares.
-  if (ShouldPrint(1)) {
+  if (ShouldPrint(1) && !lines_to_add.empty()) {
     output_lines.push_back(
       OutputLine("\n" + filename + " should add these lines:"));
-    for (const auto& key_line : sorted_lines) {
+    for (const auto& key_line : lines_to_add) {
       const OneIncludeOrForwardDeclareLine* line = key_line.second;
-      if (line->is_desired() && !line->is_present()) {
-        output_lines.push_back(
-          PrintableIncludeOrForwardDeclareLine(*line, aqi));
-        ++num_edits;
-      }
+      output_lines.push_back(
+        PrintableIncludeOrForwardDeclareLine(*line, aqi));
+      ++num_edits;
     }
   }
 
   // Second, includes and forward-declares that should be removed.
-  if (ShouldPrint(1)) {
+  if (ShouldPrint(1) && !lines_to_delete.empty()) {
     output_lines.push_back(
         OutputLine("\n" + filename + " should remove these lines:"));
-    for (const auto& key_line : sorted_lines) {
+    for (const auto& key_line : lines_to_delete) {
       const OneIncludeOrForwardDeclareLine* line = key_line.second;
-      if (line->is_present() && !line->is_desired()) {
-        output_lines.push_back(
-            PrintableIncludeOrForwardDeclareLine(*line, aqi));
-        output_lines.back().add_prefix("- ");
+      output_lines.push_back(
+          PrintableIncludeOrForwardDeclareLine(*line, aqi));
+      output_lines.back().add_prefix("- ");
 
-        ++num_edits;
-      }
+      ++num_edits;
     }
   }
 
