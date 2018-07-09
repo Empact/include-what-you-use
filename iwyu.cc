@@ -3308,7 +3308,11 @@ class InstantiatedTemplateVisitor
 
     const ClassTemplateSpecializationDecl* class_decl
         = DynCastFrom(TypeToDeclAsWritten(type));
-    CHECK_(class_decl && "TemplateSpecializationType is not a TplSpecDecl?");
+    // https://github.com/include-what-you-use/include-what-you-use/issues/150#issuecomment-398864357
+    if (!class_decl) {
+      return false;
+    }
+    // CHECK_(class_decl && "TemplateSpecializationType is not a TplSpecDecl?");
     if (ContainsKey(traversed_decls_, class_decl))
       return true;   // avoid recursion & repetition
     traversed_decls_.insert(class_decl);
