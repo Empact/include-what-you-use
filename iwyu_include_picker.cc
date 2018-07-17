@@ -327,6 +327,8 @@ const IncludeMapEntry libc_symbol_map[] = {
   { "mode_t", kPrivate, "<sys/mman.h>", kPublic },
   { "mode_t", kPrivate, "<sys/stat.h>", kPublic },
   { "mode_t", kPrivate, "<sys/types.h>", kPublic },
+  { "std::move", kPrivate, "<utility>", kPublic },
+  { "std::move", kPrivate, "<type_traits>", kPublic },
   { "nlink_t", kPrivate, "<fts.h>", kPublic },
   { "nlink_t", kPrivate, "<sys/stat.h>", kPublic },
   { "nlink_t", kPrivate, "<sys/types.h>", kPublic },
